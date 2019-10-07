@@ -1,0 +1,6 @@
+python meta_converter.py RGBToCoord RGBToCoordPB
+~/Downloads/tensorflow/bazel-bin/tensorflow/tools/graph_transforms/transform_graph --in_graph=./RGBToCoordPB/output_graph.pb --out_graph=./RGBToCoordPB/optimized_output_graph.pb --inputs='RGBToCoordIn' --outputs='RGBToCoordOut' --transforms='strip_unused_nodes(type=float, shape="1, 256, 256, 3") remove_nodes(op=CheckNumerics) fold_constants(ignore_errors=true) fold_batch_norms fold_old_batch_norms merge_duplicate_nodes strip_unused_nodes sort_by_execution_order' #obfuscate_names
+tflite_convert --output_file=./RGBToCoordTFLite/pose_annotator_slim.tflite --dump_graphviz_dir=./RGBGraphViz --graph_def_file=./RGBToCoordPB/optimized_output_graph.pb --input_arrays=RGBToCoordIn --output_arrays=RGBToCoordOut --inference_type=QUANTIZED_UINT8 --mean_values=0 --std_dev_values=43 #'--default_ranges_min=-1 --default_ranges_max=10 --mean_values=128 --std_dev_values=127
+#python tfliteconverter.py
+
+
